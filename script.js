@@ -1,9 +1,13 @@
+const URL_SUPABASE = "https://xxxx.supabase.co"; // votre URL de projet
+const CLE_ANON = "eyJhbGciOi..."; // votre clé anon (Project Settings → API)
+const supabase = window.supabase.createClient(URL_SUPABASE, CLE_ANON);
+
 const form = document.querySelector("#contact");
 const confirmation = document.querySelector("#confirmation");
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
+  event.preventDefault(); // empêche le rechargement de la page
 
-  event.preventDefault(); 
   const nom = document.querySelector("#nom").value;
   const email = document.querySelector("#email").value;
   const message = document.querySelector("#message").value;
@@ -13,8 +17,15 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  confirmation.textContent = `Merci ${nom}, ton message a bien été pris en compte.`;
-  form.reset();
+  const { error } = await supabase
+    .from("contacts")
+    .insert({ nom: nom, email: email, message: message });
 
-
+  if (error) {
+    confirmation.textContent = "Oups, l'envoi a échoué. Réessaie.";
+    console.error(error);
+  } else {
+    confirmation.textContent = `Merci ${nom}, ton message a bien été enregistré.`;
+    form.reset();
+  }
 });
