@@ -6,7 +6,7 @@ const form = document.querySelector("#contacts");
 const confirmation = document.querySelector("#confirmation");
 
 form.addEventListener("submit", async (event) => {
-  event.preventDefault(); // empêche le rechargement de la page
+  event.preventDefault(); 
 
   const nom = document.querySelector("#nom").value;
   const email = document.querySelector("#email").value;
